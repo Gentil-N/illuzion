@@ -5,4 +5,4 @@ cmake ../. -DCMAKE_BUILD_TYPE=Debug
 make -j4
 
 echo -----------------Starting
-./illuzion --version --inputs="./data/yes.png" --outputs="./data/yes_fh" --flip-horizontal
+./illuzion --inputs="./data/yes.png" --outputs="./data/yes_r" --resize=100,x2

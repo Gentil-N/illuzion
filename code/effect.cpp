@@ -75,7 +75,11 @@ namespace ilzn
                                           {
                                                  size_t curr_base_pixel = (k * picture.width() + l) * 4;
                                                  float base_weight_width = 1.0f, base_weight_height = 1.0f;
-                                                 if (k == first_pixel_height && k != last_pixel_height)
+                                                 if(k == first_pixel_height && k == last_pixel_height)
+                                                 {
+                                                        base_weight_height = 1.0f;
+                                                 }
+                                                 else if (k == first_pixel_height && k != last_pixel_height)
                                                  {
                                                         base_weight_height = 1.0f - (min_height - first_pixel_height);
                                                  }
@@ -83,7 +87,11 @@ namespace ilzn
                                                  {
                                                         base_weight_height = max_height - last_pixel_height;
                                                  }
-                                                 if (l == first_pixel_width && l != last_pixel_width)
+                                                 if(l == first_pixel_width && l == last_pixel_width)
+                                                 {
+                                                        base_weight_width = 1.0f;
+                                                 }
+                                                 else if (l == first_pixel_width)
                                                  {
                                                         base_weight_width = 1.0f - (min_width - first_pixel_width);
                                                  }

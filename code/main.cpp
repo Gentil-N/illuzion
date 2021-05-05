@@ -5,7 +5,7 @@
 #include "illuzion.hpp"
 
 #define VERSION_MAJOR 1
-#define VERSION_MINOR 0
+#define VERSION_MINOR 1
 
 bool HELP = false;
 bool VERSION = false;
@@ -21,6 +21,7 @@ std::vector<std::function<void(ilzn::Picture &picture)>> PROCS;
 const char OPT_INIT_DELIMITER = '-';
 const char OPT_ARGS_DELIMITER = ',';
 const char OPT_ASSIGN_DELIMITER = '=';
+const char ARG_MUL = 'x';
 const char END_STRING = '\0';
 
 std::vector<std::string> get_args_from_option(const std::string &thing, size_t option_size_name)
@@ -87,7 +88,7 @@ std::vector<Option> OPTIONS =
          []() -> void {
                 HELP = true;
          }},
-         {"version",
+        {"version",
          "print actual version",
          []() -> void {
                 VERSION = true;
@@ -119,7 +120,7 @@ std::vector<Option> OPTIONS =
                            picture.copy(ivn);
                     });
          }},
-         {"flip-horizontal",
+        {"flip-horizontal",
          "(proc) flip picture along its hoizontal line",
          []() -> void {
                 PROCS.push_back(
@@ -152,17 +153,34 @@ std::vector<OptionMultiArgs> OPTIONS_MULTI_ARGS =
                 OUTPUT_TYPE = ilzn::get_picture_type_from_extension_name(args[0]);
          }},
         {"resize",
-         "(proc) resize picture with these two arguments : width, height",
+         "(proc) resize picture with these two arguments : width (xW to mul by W)), height (xH to mul by H)",
          [](const std::vector<std::string> &args) -> void {
                 if (args.size() != 2)
                 {
                        throw std::runtime_error("argument count is not valid : expected 2 but given " + std::to_string(args.size()));
                 }
-                size_t width = std::stoul(args[0]), height = std::stoul(args[1]);
+                size_t width = 0, height = 0;
+                float mul_width = 0, mul_height = 0;
+                if (args[0][0] == ARG_MUL)
+                {
+                       mul_width = std::stof(args[0].substr(1, args[0].size()));
+                }
+                else
+                {
+                       width = std::stoul(args[0]);
+                }
+                if (args[1][0] == ARG_MUL)
+                {
+                       mul_height = std::stof(args[1].substr(1, args[1].size()));
+                }
+                else
+                {
+                       height = std::stoul(args[1]);
+                }
                 PROCS.push_back(
-                    [width, height](ilzn::Picture &picture) -> void {
+                    [width, height, mul_width, mul_height](ilzn::Picture &picture) -> void {
                            ilzn::Picture rsz;
-                           rsz.alloc(width, height);
+                           rsz.alloc(width + picture.width() * mul_width, height + picture.height() * mul_height);
                            ilzn::effect::resize(picture, rsz);
                            picture.copy(rsz);
                     });
@@ -216,7 +234,7 @@ void print_help()
 
 void process()
 {
-       if(VERSION)
+       if (VERSION)
        {
               std::cout << VERSION_MAJOR << "." << VERSION_MINOR << std::endl;
        }
