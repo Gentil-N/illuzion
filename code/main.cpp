@@ -4,7 +4,11 @@
 #include <filesystem>
 #include "illuzion.hpp"
 
+#define VERSION_MAJOR 1
+#define VERSION_MINOR 0
+
 bool HELP = false;
+bool VERSION = false;
 std::string HELP_BASE_TXT =
     "Warning : procs are treated in order. Inputs and outputs too.\n"
     "Example of arguments : --inputs=\"./pic1.png\",\"./pic2.png\" --outputs=\"./pic1_igr.png\",\"./pic2_igr.png\" --invert --grey-scale --resize=1200,800";
@@ -82,6 +86,11 @@ std::vector<Option> OPTIONS =
          "print help (what you're reading)",
          []() -> void {
                 HELP = true;
+         }},
+         {"version",
+         "print actual version",
+         []() -> void {
+                VERSION = true;
          }},
         {"input-type-folder",
          "inputs option become a folder that takes 1 arguments and the outputs option become the suffix for the outputs (do not enter specials characters for suffix like ?, \\...)",
@@ -207,6 +216,10 @@ void print_help()
 
 void process()
 {
+       if(VERSION)
+       {
+              std::cout << VERSION_MAJOR << "." << VERSION_MINOR << std::endl;
+       }
        if (HELP)
        {
               print_help();
