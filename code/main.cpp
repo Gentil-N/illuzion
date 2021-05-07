@@ -130,6 +130,17 @@ std::vector<Option> OPTIONS =
                            ilzn::effect::flip_horizontal(picture, fh);
                            picture.copy(fh);
                     });
+         }},
+         {"flip-vertical",
+         "(proc) flip picture along its vertical line",
+         []() -> void {
+                PROCS.push_back(
+                    [](ilzn::Picture &picture) -> void {
+                           ilzn::Picture fh;
+                           fh.alloc(picture);
+                           ilzn::effect::flip_vertical(picture, fh);
+                           picture.copy(fh);
+                    });
          }}};
 std::vector<OptionMultiArgs> OPTIONS_MULTI_ARGS =
     {

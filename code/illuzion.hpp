@@ -79,6 +79,12 @@ namespace ilzn
 
               /**
                * picture : base picture
+               * result : picture allocated with the same size of 'picture'
+               */
+              void flip_vertical(const Picture& picture, Picture &result);
+
+              /**
+               * picture : base picture
                * result : picture allocated with the prefered size
                */
               void resize(const Picture& picture, Picture &result);

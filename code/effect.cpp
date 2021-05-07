@@ -8,11 +8,13 @@ namespace ilzn
        {
               void grey_scale(const Picture &picture, Picture &result)
               {
-                     for (size_t i = 0; i < picture.height() && i < result.height(); ++i)
+                     int width = std::min(picture.width(), result.width());
+                     int height = std::min(picture.height(), result.height());
+                     for (size_t i = 0; i < height; ++i)
                      {
-                            for (size_t j = 0; j < picture.width() && j < result.width(); ++j)
+                            for (size_t j = 0; j < width; ++j)
                             {
-                                   size_t curr_pixel = (i * picture.width() + j) * 4;
+                                   size_t curr_pixel = (i * width + j) * 4;
                                    byte grey = (picture[curr_pixel] + picture[curr_pixel + 1] + picture[curr_pixel + 2]) / 3;
                                    result[curr_pixel] = grey;
                                    result[curr_pixel + 1] = grey;
@@ -24,11 +26,13 @@ namespace ilzn
 
               void invert(const Picture &picture, Picture &result)
               {
-                     for (size_t i = 0; i < picture.height() && i < result.height(); ++i)
+                     int width = std::min(picture.width(), result.width());
+                     int height = std::min(picture.height(), result.height());
+                     for (size_t i = 0; i < height; ++i)
                      {
-                            for (size_t j = 0; j < picture.width() && j < result.width(); ++j)
+                            for (size_t j = 0; j < width; ++j)
                             {
-                                   size_t curr_pixel = (i * picture.width() + j) * 4;
+                                   size_t curr_pixel = (i * width + j) * 4;
                                    result[curr_pixel] = 0xff - picture[curr_pixel];
                                    result[curr_pixel + 1] = 0xff - picture[curr_pixel + 1];
                                    result[curr_pixel + 2] = 0xff - picture[curr_pixel + 2];
@@ -39,12 +43,32 @@ namespace ilzn
 
               void flip_horizontal(const Picture &picture, Picture &result)
               {
-                     for (size_t i = 0; i < picture.height() && i < result.height(); ++i)
+                     int width = std::min(picture.width(), result.width());
+                     int height = std::min(picture.height(), result.height());
+                     for (size_t i = 0; i < height; ++i)
                      {
-                            for (size_t j = 0; j < picture.width() && j < result.width(); ++j)
+                            for (size_t j = 0; j < width; ++j)
                             {
-                                   size_t curr_pixel = (i * picture.width() + j) * 4;
-                                   size_t curr_flip_pixel = ((i + 1) * picture.width() - j) * 4;
+                                   size_t curr_pixel = (i * width + j) * 4;
+                                   size_t curr_flip_pixel = ((i + 1) * width - j) * 4;
+                                   result[curr_pixel] = picture[curr_flip_pixel];
+                                   result[curr_pixel + 1] = picture[curr_flip_pixel + 1];
+                                   result[curr_pixel + 2] = picture[curr_flip_pixel + 2];
+                                   result[curr_pixel + 3] = picture[curr_flip_pixel + 3];
+                            }
+                     }
+              }
+
+              void flip_vertical(const Picture &picture, Picture &result)
+              {
+                     int width = std::min(picture.width(), result.width());
+                     int height = std::min(picture.height(), result.height());
+                     for (size_t i = 0; i < height; ++i)
+                     {
+                            for (size_t j = 0; j < width; ++j)
+                            {
+                                   size_t curr_pixel = (i * width + j) * 4;
+                                   size_t curr_flip_pixel = ((height - i - 1) * width + j) * 4;
                                    result[curr_pixel] = picture[curr_flip_pixel];
                                    result[curr_pixel + 1] = picture[curr_flip_pixel + 1];
                                    result[curr_pixel + 2] = picture[curr_flip_pixel + 2];
